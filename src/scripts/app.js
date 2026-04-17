@@ -9,6 +9,11 @@ const brandName = document.querySelector("#brand-name");
 const brandRole = document.querySelector("#brand-role");
 const footerName = document.querySelector("#footer-name");
 const descriptionMeta = document.querySelector('meta[name="description"]');
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+function getScrollBehavior() {
+  return prefersReducedMotion.matches ? "auto" : "smooth";
+}
 
 function syncChrome() {
   if (brandMark) {
@@ -29,7 +34,10 @@ function syncChrome() {
 
   if (footerLinks) {
     footerLinks.innerHTML = siteContent.contact.socials
-      .map((social) => `<a href="${social.href}" target="_blank" rel="noreferrer">${social.label}</a>`)
+      .map(
+        (social) =>
+          `<a href="${social.href}" target="_blank" rel="noreferrer" aria-label="${social.label} (mở trong tab mới)" translate="no">${social.label}</a>`
+      )
       .join("");
   }
 
@@ -56,14 +64,16 @@ function renderRoute() {
   if (hash === "#home" || hash === "#" || hash === "") {
     app.innerHTML = renderHomePage(siteContent);
     updateSeo(siteContent.seo.title, siteContent.seo.description);
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "auto" });
+    app.focus();
     return;
   }
 
   if (hash === "#blog") {
     app.innerHTML = renderPostsPage(siteContent);
     updateSeo(`Bài đăng | ${siteContent.profile.name}`, "Những bài viết về công việc, kỹ thuật và đời sống của Trần Thế Bảo.");
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "auto" });
+    app.focus();
     return;
   }
 
@@ -75,7 +85,8 @@ function renderRoute() {
       post ? `${post.title} | ${siteContent.profile.name}` : `Không tìm thấy bài viết | ${siteContent.profile.name}`,
       post ? post.excerpt : siteContent.seo.description
     );
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "auto" });
+    app.focus();
     return;
   }
 
@@ -86,11 +97,12 @@ function renderRoute() {
   const section = document.getElementById(sectionId);
 
   if (section) {
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    section.scrollIntoView({ behavior: getScrollBehavior(), block: "start" });
     return;
   }
 
-  window.scrollTo({ top: 0, behavior: "instant" });
+  window.scrollTo({ top: 0, behavior: "auto" });
+  app.focus();
 }
 
 syncChrome();

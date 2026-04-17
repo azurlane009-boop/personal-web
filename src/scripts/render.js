@@ -1,15 +1,25 @@
 const renderList = (items, className, formatter) =>
   `<div class="${className}">${items.map(formatter).join("")}</div>`;
 
-const renderPostCards = (posts, limit) => {
+const renderEmptyState = (message) => `
+  <article class="content-card empty-state">
+    <p>${message}</p>
+  </article>
+`;
+
+const renderPostCards = (posts, limit, headingTag = "h3") => {
   const visiblePosts = typeof limit === "number" ? posts.slice(0, limit) : posts;
+
+  if (!visiblePosts.length) {
+    return renderEmptyState("Bài viết sẽ được bổ sung sớm.");
+  }
 
   return visiblePosts
     .map(
       (post) => `
         <article class="content-card post-card">
           <p class="post-category">${post.category}</p>
-          <h3>${post.title}</h3>
+          <${headingTag}>${post.title}</${headingTag}>
           <p>${post.excerpt}</p>
           <a class="project-link" href="#post/${post.slug}">Đọc bài viết</a>
         </article>
@@ -20,6 +30,14 @@ const renderPostCards = (posts, limit) => {
 
 export function renderHomePage(content) {
   const projects = content.projects.items.filter((project) => project.name && project.name !== "Khong co");
+  const socialLinks = content.contact.socials.length
+    ? content.contact.socials
+        .map(
+          (social) =>
+            `<a class="tag tag-link" href="${social.href}" target="_blank" rel="noreferrer" aria-label="${social.label} (mở trong tab mới)" translate="no">${social.label}</a>`
+        )
+        .join("")
+    : renderEmptyState("Thông tin liên hệ mạng xã hội sẽ được bổ sung sớm.");
 
   return `
     <section class="hero section">
@@ -28,11 +46,11 @@ export function renderHomePage(content) {
           <p class="eyebrow">${content.hero.eyebrow}</p>
           <h1>${content.hero.title}</h1>
           <p class="lead">${content.hero.description}</p>
-          <div class="tab-bar" aria-label="Hero navigation">
-            <a class="tab is-active" href="#projects">Dự án</a>
+          <nav class="tab-bar" aria-label="Đi nhanh tới nội dung chính">
+            <a class="tab" href="#projects">Dự án</a>
             <a class="tab" href="#life">Đời sống</a>
             <a class="tab" href="#blog">Bài đăng</a>
-          </div>
+          </nav>
           <div class="actions">
             <a class="button button-primary" href="${content.hero.primaryCta.href}">${content.hero.primaryCta.label}</a>
             <a class="button button-secondary" href="${content.hero.secondaryCta.href}">${content.hero.secondaryCta.label}</a>
@@ -51,7 +69,7 @@ export function renderHomePage(content) {
             <div class="gradient-orb orb-pink"></div>
             <div class="stage-card stage-primary">
               <p class="panel-label">PROFILE PANEL</p>
-              <h2>Tôi thích những sản phẩm có chiều sâu, hoạt động ổn định và được xây bằng một tư duy đủ rõ ràng.</h2>
+              <p class="stage-title">Tôi thích những sản phẩm có chiều sâu, hoạt động ổn định và được xây bằng một tư duy đủ rõ ràng.</p>
             </div>
             <div class="stage-card stage-secondary">
               <p class="panel-label">CURRENT FOCUS</p>
@@ -164,27 +182,35 @@ export function renderHomePage(content) {
         <h2>${content.projects.title}</h2>
       </div>
       <div class="container project-list">
-        ${projects
-          .map(
-            (project, index) => `
-              <article class="project-card">
-                <div class="project-meta">
-                  <span>0${index + 1}</span>
-                  <p>${project.role}</p>
-                </div>
-                <div class="project-body">
-                  <h3>${project.name}</h3>
-                  <p>${project.summary}</p>
-                  <div class="tag-row">
-                    ${project.stack.map((item) => `<span class="tag">${item}</span>`).join("")}
-                  </div>
-                  ${project.url ? `<a class="project-link" href="${project.url}" target="_blank" rel="noreferrer">Xem chi tiết</a>` : ""}
-                </div>
-                <p class="project-outcome">${project.outcome}</p>
-              </article>
-            `
-          )
-          .join("")}
+        ${
+          projects.length
+            ? projects
+                .map(
+                  (project, index) => `
+                    <article class="project-card">
+                      <div class="project-meta">
+                        <span>${String(index + 1).padStart(2, "0")}</span>
+                        <p>${project.role}</p>
+                      </div>
+                      <div class="project-body">
+                        <h3 translate="no">${project.name}</h3>
+                        <p>${project.summary}</p>
+                        <div class="tag-row">
+                          ${project.stack.map((item) => `<span class="tag" translate="no">${item}</span>`).join("")}
+                        </div>
+                        ${
+                          project.url
+                            ? `<a class="project-link" href="${project.url}" target="_blank" rel="noreferrer" aria-label="Xem chi tiết ${project.name} (mở trong tab mới)">Xem chi tiết</a>`
+                            : ""
+                        }
+                      </div>
+                      <p class="project-outcome">${project.outcome}</p>
+                    </article>
+                  `
+                )
+                .join("")
+            : renderEmptyState("Dự án nổi bật sẽ được cập nhật sớm.")
+        }
       </div>
     </section>
 
@@ -208,18 +234,22 @@ export function renderHomePage(content) {
         <h2>${content.skills.title}</h2>
       </div>
       <div class="container skill-groups">
-        ${content.skills.groups
-          .map(
-            (group) => `
-              <article class="skill-card">
-                <h3>${group.name}</h3>
-                <div class="tag-row">
-                  ${group.items.map((item) => `<span class="tag">${item}</span>`).join("")}
-                </div>
-              </article>
-            `
-          )
-          .join("")}
+        ${
+          content.skills.groups.length
+            ? content.skills.groups
+                .map(
+                  (group) => `
+                    <article class="skill-card">
+                      <h3>${group.name}</h3>
+                      <div class="tag-row">
+                        ${group.items.length ? group.items.map((item) => `<span class="tag" translate="no">${item}</span>`).join("") : "<p>Đang cập nhật.</p>"}
+                      </div>
+                    </article>
+                  `
+                )
+                .join("")
+            : renderEmptyState("Kỹ năng và công cụ sẽ được bổ sung sớm.")
+        }
       </div>
     </section>
 
@@ -252,9 +282,7 @@ export function renderHomePage(content) {
         <div class="contact-actions">
           <a class="contact-email" href="mailto:${content.contact.email}">${content.contact.email}</a>
           <div class="tag-row">
-            ${content.contact.socials
-              .map((social) => `<a class="tag tag-link" href="${social.href}" target="_blank" rel="noreferrer">${social.label}</a>`)
-              .join("")}
+            ${socialLinks}
           </div>
         </div>
       </div>
@@ -273,8 +301,11 @@ export function renderPostsPage(content) {
     </section>
 
     <section class="section section-alt">
+      <div class="container">
+        <h2 class="visually-hidden">Danh sách bài viết</h2>
+      </div>
       <div class="container card-grid card-grid-three">
-        ${renderPostCards(content.posts.items)}
+        ${renderPostCards(content.posts.items, undefined, "h2")}
       </div>
     </section>
   `;
