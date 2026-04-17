@@ -59,3 +59,5 @@ Luu y:
 Tai lieu GitHub Pages:
 
 - https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+
+Workflow se tu deploy lai sau moi lan push len `main`.
