@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trần Thế Bảo | Mobile Developer và Backend Python</title>
+    <meta
+      name="description"
+      content="Website cá nhân để quảng bá bản thân, chia sẻ dự án và kết nối hợp tác."
+    />
+    <link rel="stylesheet" href="./src/styles/tokens.css" />
+    <link rel="stylesheet" href="./src/styles/base.css" />
+    <link rel="stylesheet" href="./src/styles/layout.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header" id="top">
+        <div class="container header-row">
+          <a class="brand" href="#top" aria-label="Trang chủ">
+            <span class="brand-mark" id="brand-mark">BT</span>
+            <span class="brand-text">
+              <strong id="brand-name">Trần Thế Bảo</strong>
+              <small id="brand-role">Mobile Developer và Backend Python</small>
+            </span>
+          </a>
+          <nav class="nav" aria-label="Điều hướng chính">
+            <a href="#home">Home</a>
+            <a href="#blog">Posts</a>
+            <a href="#about">About</a>
+            <a href="#contact">Liên hệ</a>
+          </nav>
+          <div class="header-actions">
+            <a class="icon-button" href="#blog" aria-label="Xem bài viết">
+              <span aria-hidden="true">+</span>
+            </a>
+            <a class="button button-primary" href="#contact">Làm việc với tôi</a>
+          </div>
+        </div>
+      </header>
+
+      <main id="app"></main>
+
+      <footer class="site-footer">
+        <div class="container footer-row">
+          <p>(c) <span id="year"></span> <span id="footer-name">Trần Thế Bảo</span>. Xây dựng để quảng bá bản thân một cách rõ ràng và chuyên nghiệp.</p>
+          <div class="footer-links" id="footer-links"></div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="module" src="./src/scripts/app.js"></script>
+  </body>
+</html>

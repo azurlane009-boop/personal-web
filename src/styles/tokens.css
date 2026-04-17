@@ -1,0 +1,19 @@
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-strong: #ffffff;
+  --surface-alt: rgba(0, 0, 0, 0.03);
+  --text: #000000;
+  --muted: rgba(0, 0, 0, 0.68);
+  --line: rgba(0, 0, 0, 0.1);
+  --glass-dark: rgba(0, 0, 0, 0.08);
+  --glass-light: rgba(255, 255, 255, 0.16);
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  --radius-xl: 50px;
+  --radius-lg: 50px;
+  --radius-md: 8px;
+  --radius-sm: 6px;
+  --container: 1280px;
+  --font-sans: "figmaSans", "SF Pro Display", system-ui, helvetica, sans-serif;
+  --font-mono: "figmaMono", "SF Mono", Menlo, monospace;
+}
